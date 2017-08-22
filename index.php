@@ -12,6 +12,7 @@ use Abraham\TwitterOAuth\TwitterOAuth;
 if (isset($_GET['q']) && !empty($_GET['q'])) {
     $query = $_GET['q'];
     $homePage = false;
+
     require('twitterKey.php');
 
     $conn = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
@@ -72,13 +73,13 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
             <div class="panel">
 
                 <div class="panel-body">
-                    <h1><?php echo $query; ?></h1>
-                <hr/>
+                    <h1> > <?php echo $query; ?></h1>
+                    <hr/>
                     <ul class="timeline">
                         <?php
 
                         foreach ($search->statuses as $tweet) {
-                        //echo '<p>'.$tweet->text.'<br>Posted on: <a href="https://twitter.com/'.$tweet->user->screen_name.'/status/'.$tweet->id.'">'.date('Y-m-d H:i', strtotime($tweet->created_at)).'</a></p>';
+                       // echo json_encode($tweet, JSON_PRETTY_PRINT);
                            ?>
 
                             <li>
@@ -101,7 +102,8 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
                                                     via Twitter
                                                 </small>
                                             </p>
-                                            <p><?php echo $tweet->text; ?></p>
+                                            <p><?php echo preg_replace("/#([^@ 
+                                            ]*)/", "<a target=\"_new\" href=\"index.php?q=$1\">#$1</a>", $tweet->text); ?></p>
                                             <hr/>
                                             <div class="row" style="text-align:center">
                                                 <div class="col-md-6">Retweet : <?php echo $tweet->retweet_count; ?></div>
