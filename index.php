@@ -15,7 +15,8 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
     require('twitterKey.php');
 
     $conn = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
-    $search = $conn->get("search/tweets", ["q" => $query,"count"=>3]);
+    $conn->setTimeouts(10, 15);
+    $search = $conn->get("search/tweets", ["q" => $query,"count"=>10]);
     //echo print_r($search);
 } else {
     $homePage = true;
@@ -59,7 +60,7 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
                     <hr class="colorgraph">
                     <div class="row">
                         <div class="col-xs-6 col-sm-6 col-md-6 col-md-offset-3">
-                            <a type="submit" href="#search" class="btn btn-lg btn-success btn-block">Start Search</a>
+                            <a type="submit" href="#search" class="btn btn-lg btn-success btn-block">Search More</a>
                         </div>
                     </div>
                     <hr class="colorgraph">
@@ -67,8 +68,12 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
 
             </div>
                 </div>
+
             <div class="panel">
+
                 <div class="panel-body">
+                    <h1><?php echo $query; ?></h1>
+                <hr/>
                     <ul class="timeline">
                         <?php
 
@@ -77,7 +82,7 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
                            ?>
 
                             <li>
-                                <div class="timeline-badge"><i class="glyphicon glyphicon-check"></i></div>
+                                <div class="timeline-badge">11<i class="fa fa-twitter"></i></div>
                                 <div class="timeline-panel">
                                     <div class="media">
                                         <div class="media-left">
@@ -98,7 +103,7 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
                                             </p>
                                             <p><?php echo $tweet->text; ?></p>
                                             <hr/>
-                                            <div class="row" style="align:center">
+                                            <div class="row" style="text-align:center">
                                                 <div class="col-md-6">Retweet : <?php echo $tweet->retweet_count; ?></div>
                                                 <div class="col-md-6">Favaorite :<?php echo $tweet->favorite_count; ?></div>
 
@@ -114,67 +119,6 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
                         }
                         ?>
 
-                        <li>
-                            <div class="timeline-badge danger"><i class="glyphicon glyphicon-credit-card"></i></div>
-                            <div class="timeline-panel">
-                                <div class="timeline-heading">
-                                    <h4 class="timeline-title">Mussum ipsum cacilds</h4>
-                                </div>
-                                <div class="timeline-body">
-                                    <p>Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá ,
-                                        depois divoltis porris, paradis. Paisis, filhis, espiritis santis. Mé faiz
-                                        elementum girarzis, nisi eros vermeio, in elementis mé pra quem é amistosis quis
-                                        leo. Manduma pindureta quium dia nois paga. Sapien in monti palavris qui num
-                                        significa nadis i pareci latim. Interessantiss quisso pudia ce receita de bolis,
-                                        mais bolis eu num gostis.</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="timeline-badge info"><i class="glyphicon glyphicon-floppy-disk"></i></div>
-                            <div class="timeline-panel">
-                                <div class="timeline-heading">
-                                    <h4 class="timeline-title">Mussum ipsum cacilds</h4>
-                                </div>
-                                <div class="timeline-body">
-                                    <p>Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá ,
-                                        depois divoltis porris, paradis. Paisis, filhis, espiritis santis. Mé faiz
-                                        elementum girarzis, nisi eros vermeio, in elementis mé pra quem é amistosis quis
-                                        leo. Manduma pindureta quium dia nois paga. Sapien in monti palavris qui num
-                                        significa nadis i pareci latim. Interessantiss quisso pudia ce receita de bolis,
-                                        mais bolis eu num gostis.</p>
-                                    <hr>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <i class="glyphicon glyphicon-cog"></i> <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="timeline-panel">
-                                <div class="timeline-heading">
-                                    <h4 class="timeline-title">Mussum ipsum cacilds</h4>
-                                </div>
-                                <div class="timeline-body">
-                                    <p>Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá ,
-                                        depois divoltis porris, paradis. Paisis, filhis, espiritis santis. Mé faiz
-                                        elementum girarzis, nisi eros vermeio, in elementis mé pra quem é amistosis quis
-                                        leo. Manduma pindureta quium dia nois paga. Sapien in monti palavris qui num
-                                        significa nadis i pareci latim. Interessantiss quisso pudia ce receita de bolis,
-                                        mais bolis eu num gostis.</p>
-                                </div>
-                            </div>
-                        </li>
                     </ul>
                 </div>
             </div>
