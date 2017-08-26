@@ -7,19 +7,25 @@
  */
 require_once "twitteroauth-master/autoload.php";
 use Abraham\TwitterOAuth\TwitterOAuth;
-
+require('twitterKey.php');
 
 if (isset($_GET['q']) && !empty($_GET['q'])) {
     $query = $_GET['q'];
     $homePage = false;
 
-    require('twitterKey.php');
+
 
     $conn = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
     $conn->setTimeouts(10, 15);
     $search = $conn->get("search/tweets", ["q" => $query,"count"=>10]);
     //echo print_r($search);
 } else {
+    if(isset($_GET['re']) && !empty($_GET['re'])){
+        $conn = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
+        $conn->setTimeouts(10, 15);
+        $search = $conn->post("statuses/update", ["status" => "hello world"]);
+        echo json_encode($search);
+    }
     $homePage = true;
 }
 
@@ -102,8 +108,32 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
                                                     via Twitter
                                                 </small>
                                             </p>
-                                            <p><?php echo preg_replace("/#([^@ 
-                                            ]*)/", "<a target=\"_new\" href=\"index.php?q=$1\">#$1</a>", $tweet->text); ?></p>
+                                            <p><br>
+                                                <?php
+                                                $strLen=strlen($tweet->text);
+                                                $newText='';
+                                                $i=0;
+                                                //  for($i=0;$i<$strLen;$i=$strLen){
+                                                foreach ($tweet->entities->urls as $URL){
+                                                    $newText=$newText.substr($tweet->text,$i,$URL->indices[0]-$i).'<a target="_blank" href="'.$URL->expanded_url.'">'.substr($tweet->text,$URL->indices[0],$URL->indices[1]-$URL->indices[0]).'</a> &nbsp;';
+                                                    $i=$URL->indices[1]+1;
+
+                                                }
+                                                $newText=$newText.substr($tweet->text,$i,$strLen-$i);
+
+                                                //  }
+                                                echo preg_replace("/#([^@ 
+                                            ]*)/", "<a target=\"_new\" href=\"index.php?q=$1\">#$1</a>", $newText); ?></p>
+                                            <?php if (isset($tweet->entities->media)){
+                                                foreach($tweet->entities->media as $MEDIA){
+                                                    ?>
+                                                    <a href="<?php echo $MEDIA->url; ?>" class="img img-responsive" target="_blank"> <img width="100%" src="<?php echo $MEDIA->media_url; ?>"/></a>
+                                                    <?php
+                                                }
+                                                ?>
+                                            <?php
+                                            }
+                                            ?>
                                             <hr/>
                                             <div class="row" style="text-align:center">
                                                 <div class="col-md-6">Retweet : <?php echo $tweet->retweet_count; ?></div>
@@ -116,10 +146,9 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
                                     </div>
 
                                 </div>
+
                             </li>
-                        <?php
-                        }
-                        ?>
+                        <?php } ?>
 
                     </ul>
                 </div>
